@@ -3,10 +3,127 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="style.css" />
         <title>Rafa</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap");
+            body,
+            html {
+                margin: 0;
+                padding: 0;
+                font-family: "Josefin Sans";
+                background: #111;
+                color: #fff;
+            }
+
+            #intro {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(
+                    circle at center,
+                    #222 0%,
+                    #111 100%
+                );
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+                z-index: 9999;
+                overflow: hidden;
+            }
+            #intro h1 {
+                font-size: 2rem;
+                text-shadow: 0 0 15px #fff;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .particle {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: #fff;
+                border-radius: 50%;
+                opacity: 0.7;
+                animation: float 5s linear infinite;
+            }
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(0);
+                }
+                100% {
+                    transform: translateY(-800px) translateX(100px);
+                }
+            }
+        </style>
     </head>
     <body>
-        <h1>oi bem vindo</h1>
+        <div id="intro">
+            <h1 id="introText"></h1>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const frases = [
+                    "Bem-vindo!",
+                    "Fiz isso pra alguns amigos…",
+                    "E você é um deles",
+                ];
+                const introText = document.getElementById("introText");
+                let current = 0,
+                    charIndex = 0;
+
+                function typeWriter() {
+                    introText.style.opacity = 1;
+                    if (charIndex < frases[current].length) {
+                        introText.textContent += frases[current][charIndex];
+                        charIndex++;
+                        setTimeout(typeWriter, 80);
+                    } else setTimeout(nextLine, 1500);
+                }
+
+                function nextLine() {
+                    current++;
+                    if (current < frases.length) {
+                        charIndex = 0;
+                        introText.textContent = "";
+                        typeWriter();
+                    } else endIntro();
+                }
+
+                function endIntro() {
+                    const intro = document.getElementById("intro");
+                    intro.style.transition = "opacity 1s";
+                    intro.style.opacity = 0;
+                    setTimeout(() => {
+                        intro.style.display = "none";
+                        document.body.style.overflow = "auto";
+
+                        // Criando conteúdo dinamicamente
+                        const mainContent = document.createElement("div");
+                        mainContent.style.textAlign = "center";
+                        mainContent.style.padding = "2rem";
+                        mainContent.innerHTML =
+                            "<h1>oi bem vindo</h1><p>teste teste teste</p>";
+                        document.body.appendChild(mainContent);
+                    }, 1000);
+                }
+
+                // Partículas
+                for (let i = 0; i < 50; i++) {
+                    const p = document.createElement("div");
+                    p.className = "particle";
+                    p.style.left = Math.random() * window.innerWidth + "px";
+                    p.style.top = Math.random() * window.innerHeight + "px";
+                    p.style.animationDuration = 3 + Math.random() * 5 + "s";
+                    document.body.appendChild(p);
+                }
+
+                typeWriter();
+            });
+        </script>
     </body>
 </html>
